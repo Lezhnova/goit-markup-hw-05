@@ -9,19 +9,29 @@
   --address-primary-color: rgba(255, 255, 255, 0.6);
   --black-color: #000000;
   --primary-background-color: #2f303a;
-  --card-set-gap: 30px;
   --border-color: #eeeeee;
   --social-link-color: #afb1b8;
   --hero-bg-color: #c4c4c4;
   --hero-overlay-color: rgba(47, 48, 58, 0.4);
+  --about-overlay-color: rgba(47, 48, 58, 0.8);
+  --portfolio-overlay-color: rgba(33, 150, 243, 0.9);
+  --modal-overlay-color: rgba(0, 0, 0, 0.2);
+  --close-border-color: rgba(0, 0, 0, 0.1);
+
   --footer-socials-bg-color: rgba(255, 255, 255, 0.1);
+  --transparent-color: rgba(0, 0, 0, 0);
+
+  --card-set-gap: 30px;
+
   --box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14),
     0px 2px 1px rgba(0, 0, 0, 0.2);
-
   --portfolio-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12),
     0px 4px 4px rgba(0, 0, 0, 0.06), 1px 4px 6px rgba(0, 0, 0, 0.16);
   --button-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1),
     0px 1px 2px rgba(0, 0, 0, 0.08), 0px 2px 2px rgba(0, 0, 0, 0.12);
+
+  --transition-duration: 250ms;
+  --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 ul {
@@ -56,18 +66,21 @@ body {
   margin-right: auto;
 }
 
-header .container {
+.header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-header .nav {
+.header .nav {
   display: flex;
   align-items: center;
 }
 
-header {
+.header {
+  position: relative;
+
+  background-color: var(--white-color);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -132,10 +145,14 @@ img {
   align-items: center;
 
   max-width: 1600px;
+  min-height: 600px;
   margin-left: auto;
   margin-right: auto;
 
+  padding: 200px 0;
+
   background-color: var(--hero-bg-color);
+
   background-image: linear-gradient(
       to top,
       var(--hero-overlay-color),
@@ -151,7 +168,6 @@ img {
 }
 
 .hero-title {
-  margin-top: 200px;
   margin-bottom: 30px;
 
   font-weight: 900;
@@ -164,7 +180,6 @@ img {
 
 .hero .button {
   display: block;
-  margin-bottom: 200px;
   padding: 10px 32px;
   font-weight: 700;
   color: currentColor;
@@ -187,6 +202,10 @@ img {
   padding: 6px 22px;
   border-radius: 4px;
   cursor: pointer;
+
+  transition-property: color, background-color, box-shadow;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .button:hover,
@@ -210,6 +229,7 @@ img {
   font-weight: 700;
   font-size: 26px;
   line-height: 1.19;
+
   color: var(--accent-color);
 }
 
@@ -218,7 +238,7 @@ img {
   outline: none;
 }
 
-header .logo-part {
+.header .logo-part {
   color: var(--black-color);
 }
 
@@ -231,14 +251,20 @@ header .logo-part {
 }
 
 .nav-link {
+  position: relative;
   display: inline-block;
   padding-top: 32px;
   padding-bottom: 32px;
 
+  font-size: 14px;
   color: var(--secondary-color);
   font-weight: 500;
-  line-height: 1.1428;
+  line-height: 1.1721;
   letter-spacing: 0.02em;
+
+  transition-property: color, background-color, box-shadow;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .nav-link:hover,
@@ -247,13 +273,48 @@ header .logo-part {
   outline: none;
 }
 
+.nav-link::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: -1px;
+
+  border-radius: 2px;
+  background-color: var(--transparent-color);
+
+  transition-property: background-color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.nav-link:focus::after,
+.nav-link:hover::after {
+  background-color: var(--accent-color);
+}
+
 .current-page {
   color: var(--accent-color);
+  position: relative;
+
+  transition-property: color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .current-page:hover,
 .current-page:focus {
   color: var(--hover-background-color);
+}
+
+.current-page::after {
+  background-color: var(--accent-color);
+}
+
+.current-page:hover::after,
+.current-page:focus::after {
+  background-color: var(--hover-background-color);
 }
 
 .features-title {
@@ -306,6 +367,10 @@ header .logo-part {
 .portfolio-item-link {
   display: block;
   color: var(--primary-color);
+
+  transition-property: box-shadow;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .portfolio-item-link:hover,
@@ -337,7 +402,37 @@ header .logo-part {
 }
 
 .portfolio .card-thumb {
+  position: relative;
   max-height: 294px;
+  overflow: hidden;
+}
+
+.portfolio-item-link .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  padding: 64px 24px;
+
+  background: var(--portfolio-overlay-color);
+  transform: translateY(150%);
+  transition-property: transform;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.portfolio-item-link:hover .overlay,
+.portfolio-item-link:focus .overlay {
+  transform: translateY(0);
+}
+
+.portfolio .overlay-text {
+  font-size: 18px;
+  line-height: 1.56;
+  letter-spacing: 0.03em;
+  color: var(--white-color);
 }
 
 .card-title {
@@ -419,6 +514,10 @@ header .logo-part {
   color: var(--primary-color);
   margin-right: 50px;
   align-items: center;
+
+  transition-property: color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .address-item:last-child {
@@ -447,7 +546,7 @@ header .logo-part {
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
+
   color: var(--white-color);
 }
 
@@ -491,7 +590,31 @@ header .logo-part {
 }
 
 .about .card-thumb {
+  position: relative;
   max-height: 294px;
+}
+
+.about-card .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+
+  padding: 27px 15px;
+  text-align: center;
+
+  background: var(--about-overlay-color);
+  color: var(--white-color);
+
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.142;
+  letter-spacing: 0.03em;
+
+  transition-property: transform;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .team > .container {
@@ -503,7 +626,6 @@ header .logo-part {
 
 .filter-set {
   display: flex;
-
   justify-content: center;
   margin-bottom: 50px;
 }
@@ -545,6 +667,10 @@ header .logo-part {
   align-items: center;
   border-radius: 50%;
   fill: var(--social-link-color);
+
+  transition-property: fill, background-color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .social-link:hover,
@@ -568,6 +694,10 @@ header .logo-part {
   border: 1px solid var(--social-link-color);
   border-radius: 4px;
   fill: var(--social-link-color);
+
+  transition-property: fill, border-color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .client-link:hover,
@@ -582,7 +712,6 @@ header .logo-part {
 
   margin-top: var(--card-set-gap);
   margin-left: var(--card-set-gap);
-
   border-radius: 4px;
   text-align: center;
   box-shadow: none;
@@ -602,4 +731,68 @@ header .logo-part {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+.backdrop-sign {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-overlay-color);
+
+  transition-property: opacity;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.backdrop-sign.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.backdrop-sign.is-hidden .modal-sign {
+  transform: translateX(-100vh);
+}
+
+.modal-sign {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  width: 528px;
+  height: 581px;
+  background-color: var(--white-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 4px;
+
+  transition-property: transform;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--transparent-color);
+  color: var(--black-color);
+  border: 1px solid currentColor;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--close-border-color);
+  cursor: pointer;
+
+  transition-property: color;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.close-button:hover,
+.close-button:focus {
+  outline: none;
+  color: var(--accent-color);
 }
